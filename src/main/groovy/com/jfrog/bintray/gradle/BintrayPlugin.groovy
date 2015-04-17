@@ -8,6 +8,7 @@ import org.gradle.api.invocation.Gradle
 import org.gradle.api.publish.Publication
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.tasks.Upload
 
 class BintrayPlugin implements Plugin<Project> {
@@ -90,9 +91,7 @@ class BintrayPlugin implements Plugin<Project> {
                                 if (!publication) {
                                     project.logger.warn 'Publication {} not found in project {}.', it, project.path
                                 } else if (publication instanceof MavenPublication) {
-                                    def taskName =
-                                            "publish${it[0].toUpperCase()}${it.substring(1)}PublicationToMavenLocal"
-                                    bintrayUpload.dependsOn(taskName)
+                                    bintrayUpload.dependsOn(MavenPublishPlugin.PUBLISH_LOCAL_LIFECYCLE_TASK_NAME)
                                     /*bintrayUpload.dependsOn(publication.publishableFiles)*/
                                 } else {
                                     project.logger.warn "{} can only use maven publications - skipping {}.",
